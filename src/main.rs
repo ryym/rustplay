@@ -1,12 +1,17 @@
 extern crate rustplay;
 
 fn main() {
-    use std::io::{self, Read};
+    use std::io::Read;
+    use std::fs::File;
+    use std::env;
     use rustplay as rp;
 
+    let args: Vec<String> = env::args().collect();
+    let mut src = File::open(&args[1]).unwrap();
+
     let mut code = String::new();
-    io::stdin().read_to_string(&mut code).unwrap();
-    let code = code;
+    src.read_to_string(&mut code).unwrap();
+
     let client = rp::client::new();
     let res = client.run(&code);
 
