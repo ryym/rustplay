@@ -1,15 +1,11 @@
 #[macro_use]
 extern crate serde_derive;
+extern crate serde_json;
+extern crate reqwest;
+extern crate open;
+extern crate urlencoding;
 
-#[derive(Serialize, Debug)]
-pub struct Payload {
-    pub channel: String,
-    pub code: String,
-    #[serde(rename = "crateType")]
-    pub crate_type: String,
-    pub mode: String,
-    pub tests: bool,
-}
+pub mod client;
 
 #[derive(Deserialize, Debug)]
 pub struct RunResult {

@@ -1,47 +1,20 @@
-extern crate reqwest;
-extern crate serde_json;
-extern crate open;
-extern crate urlencoding;
 extern crate rustplay;
-
-use rustplay::*;
 
 fn main() {
     use std::io::{self, Read};
-    use reqwest as r;
+    use rustplay as rp;
 
-    let mut buf = String::new();
-    io::stdin().read_to_string(&mut buf).unwrap();
+    let mut code = String::new();
+    io::stdin().read_to_string(&mut code).unwrap();
+    let code = code;
+    let client = rp::client::new();
+    let res = client.run(&code);
 
-    let p = Payload{
-        channel: "stable".to_string(),
-        // code: "fn main() { println!(\"{}\", 1); }".to_string(),
-        code: buf,
-        crate_type: "bin".to_string(),
-        mode: "debug".to_string(),
-        tests: false,
-    };
-
-
-    let body = serde_json::to_string(&p).unwrap();
-
-    let client = r::Client::new();
-    let mut res = client.post("https://play.rust-lang.org/execute")
-        .header(r::header::ContentType::json())
-        .body(body)
-        .send().unwrap();
-
-    let ret: RunResult = res.json().unwrap();
-    if ret.success {
-        println!("{}", ret.stdout);
-
-        // Open Playground
-        let query = urlencoding::encode(&p.code);
-        let url = format!("https://play.rust-lang.org/?code={}", query);
-        open::that(url).unwrap();
-
+    if res.success {
+        println!("{}", res.stdout);
+        client.open(&code);
     } else {
-        println!("{}", ret.stderr);
+        println!("{}", res.stderr);
         std::process::exit(1);
     }
 }
