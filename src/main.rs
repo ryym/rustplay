@@ -1,27 +1,8 @@
 extern crate reqwest;
-
-#[macro_use]
-extern crate serde_derive;
-
-extern crate serde;
 extern crate serde_json;
+extern crate rustplay;
 
-#[derive(Serialize, Debug)]
-struct Payload {
-    channel: String,
-    code: String,
-    #[serde(rename = "crateType")]
-    crate_type: String,
-    mode: String,
-    tests: bool,
-}
-
-#[derive(Deserialize, Debug)]
-struct RunResult {
-    stderr: String,
-    stdout: String,
-    success: bool,
-}
+use rustplay::*;
 
 fn main() {
     use std::io::{self, Read};
