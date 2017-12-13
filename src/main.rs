@@ -1,5 +1,7 @@
 extern crate reqwest;
 extern crate serde_json;
+extern crate open;
+extern crate urlencoding;
 extern crate rustplay;
 
 use rustplay::*;
@@ -20,6 +22,7 @@ fn main() {
         tests: false,
     };
 
+
     let body = serde_json::to_string(&p).unwrap();
 
     let client = r::Client::new();
@@ -31,6 +34,12 @@ fn main() {
     let ret: RunResult = res.json().unwrap();
     if ret.success {
         println!("{}", ret.stdout);
+
+        // Open Playground
+        let query = urlencoding::encode(&p.code);
+        let url = format!("https://play.rust-lang.org/?code={}", query);
+        open::that(url).unwrap();
+
     } else {
         println!("{}", ret.stderr);
         std::process::exit(1);
