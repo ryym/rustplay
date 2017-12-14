@@ -22,6 +22,8 @@ pub struct Client {
     conf: Config,
 }
 
+const SITE_HOST: &str = "https://play.rust-lang.org";
+
 impl Client {
     pub fn new(conf: Config) -> Self {
         Client{conf}
@@ -43,7 +45,7 @@ impl Client {
         let body = serde_json::to_string(&p)?;
 
         let client = r::Client::new();
-        let mut res = client.post("https://play.rust-lang.org/execute")
+        let mut res = client.post(&format!("{}/execute", SITE_HOST))
             .header(r::header::ContentType::json())
             .body(body)
             .send()?;
@@ -62,7 +64,8 @@ impl Client {
 
         let encoded_code = urlencoding::encode(&code);
         let url = format!(
-            "https://play.rust-lang.org/?{}&code={}",
+            "{}/?{}&code={}",
+            SITE_HOST,
             conf_to_query(&self.conf),
             encoded_code);
         let _ = open::that(url)?;
