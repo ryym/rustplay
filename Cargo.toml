@@ -3,6 +3,10 @@ name = "rustplay"
 version = "0.1.0"
 authors = ["ryym <ryym.64@gmail.com>"]
 
+[[bin]]
+name = "rustplay"
+doc = false
+
 [dependencies]
 reqwest = "0.8.1"
 serde = "1.0.11"
