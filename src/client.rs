@@ -18,15 +18,15 @@ pub struct RunResult {
     pub success: bool,
 }
 
-pub fn new(conf: Config) -> Client {
-    Client{conf}
-}
-
 pub struct Client {
     conf: Config,
 }
 
 impl Client {
+    pub fn new(conf: Config) -> Self {
+        Client{conf}
+    }
+
     pub fn run(&self, code: &String) -> Result<RunResult> {
         use serde_json;
         use reqwest as r;

@@ -3,7 +3,7 @@ use std::fs::File;
 use getopts::{Options, Matches};
 use errors::*;
 use config::{Config, Channel, Mode};
-use client;
+use client::Client;
 
 pub struct CmdOpts {
     pub filename: String,
@@ -34,7 +34,7 @@ fn exec(opts: CmdOpts, conf: Config) -> Result<()> {
     src.read_to_string(&mut code)
         .chain_err(|| format!("Failed to read {}", filename))?;
 
-    let client = client::new(conf);
+    let client = Client::new(conf);
 
     if opts.run {
         let res = client.run(&code)?;
