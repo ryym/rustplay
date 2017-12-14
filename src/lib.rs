@@ -6,6 +6,7 @@ extern crate open;
 extern crate urlencoding;
 #[macro_use]
 extern crate error_chain;
+extern crate getopts;
 
 mod config;
 mod errors;
