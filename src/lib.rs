@@ -7,6 +7,7 @@ extern crate urlencoding;
 #[macro_use]
 extern crate error_chain;
 
+mod config;
 mod errors;
 pub mod client;
 pub mod cli;
