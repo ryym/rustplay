@@ -42,7 +42,11 @@ impl Client {
             .send()?;
 
         let ret: RunResult = res.json()?;
-        Ok(ret)
+        if ret.success {
+            Ok(ret)
+        } else {
+            Err(ret.stderr.into())
+        }
     }
 
     pub fn open(&self, code: &String) -> Result<()> {

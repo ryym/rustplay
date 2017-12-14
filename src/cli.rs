@@ -7,6 +7,8 @@ use client;
 
 pub struct CmdOpts {
     pub filename: String,
+    pub run: bool,
+    pub open: bool,
     pub channel: Option<String>,
 }
 
@@ -15,14 +17,14 @@ enum Parsed {
     Go(CmdOpts, Config),
 }
 
-pub fn run(args: &Vec<String>) -> Result<String> {
+pub fn run(args: &Vec<String>) -> Result<Option<String>> {
     match parse_args(&args)? {
-        Parsed::Help(msg) => Ok(msg),
-        Parsed::Go(opts, conf) => exec(opts, conf)
+        Parsed::Help(msg) => Ok(Some(msg)),
+        Parsed::Go(opts, conf) => exec(opts, conf).map(|_| None),
     }
 }
 
-fn exec(opts: CmdOpts, conf: Config) -> Result<String> {
+fn exec(opts: CmdOpts, conf: Config) -> Result<()> {
     let filename = &opts.filename;
     let mut src = File::open(filename)
         .chain_err(|| format!("Failed to open {}", filename))?;
@@ -32,14 +34,15 @@ fn exec(opts: CmdOpts, conf: Config) -> Result<String> {
         .chain_err(|| format!("Failed to read {}", filename))?;
 
     let client = client::new(conf);
-    let res = client.run(&code)?;
 
-    if res.success {
-        client.open(&code)?;
-        Ok(res.stdout)
-    } else {
-        Err(res.stderr.into())
+    if opts.run {
+        let res = client.run(&code)?;
+        println!("{}", res.stdout);
     }
+    if opts.open {
+        client.open(&code)?;
+    }
+    Ok(())
 }
 
 fn parse_args(args: &Vec<String>) -> Result<Parsed> {
@@ -59,6 +62,8 @@ fn parse_args(args: &Vec<String>) -> Result<Parsed> {
 
     let opts = CmdOpts {
         filename: m.free[0].clone(),
+        run: m.opt_present("r"),
+        open: m.opt_present("o"),
         channel: Some("stable".to_string()),
     };
 
