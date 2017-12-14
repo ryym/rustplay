@@ -45,4 +45,13 @@ impl Channel {
             Channel::Nightly => "nightly",
         }.to_string()
     }
+
+    pub fn possible_strs() -> String {
+        use self::Channel::*;
+        [Stable, Beta, Nightly]
+            .into_iter()
+            .map(|c| c.to_string())
+            .collect::<Vec<String>>()
+            .join("|")
+    }
 }

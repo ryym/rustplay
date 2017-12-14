@@ -2,7 +2,7 @@ use std::io::Read;
 use std::fs::File;
 use getopts::{Options, Matches};
 use errors::*;
-use config::Config;
+use config::{Config, Channel};
 use client;
 
 pub struct CmdOpts {
@@ -64,7 +64,7 @@ fn parse_args(args: &Vec<String>) -> Result<Parsed> {
         filename: m.free[0].clone(),
         run: m.opt_present("r"),
         open: m.opt_present("o"),
-        channel: Some("stable".to_string()),
+        channel: m.opt_str("channel"),
     };
 
     Config::new(&opts).map(|c| Parsed::Go(opts, c))
@@ -74,6 +74,9 @@ fn define_opts(opts: &mut Options) -> &mut Options {
     opts.optflag("h", "help", "print this help message");
     opts.optflag("r", "run", "run given code using Rust Playground");
     opts.optflag("o", "open", "open Rust Playground with given code");
+    opts.optopt("c", "channel",
+                "chose release channel which compiles code",
+                &Channel::possible_strs());
     opts
 }
 
