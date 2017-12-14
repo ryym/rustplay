@@ -21,12 +21,7 @@ impl Config {
 
 fn parse_channel(ch: &Option<String>) -> Result<Channel> {
     match *ch {
-        Some(ref ch) => match ch.as_ref() {
-            "stable" => Ok(Channel::Stable),
-            "beta" => Ok(Channel::Beta),
-            "nightly" => Ok(Channel::Nightly),
-            _ => Err("Invalid channel".into()),
-        },
+        Some(ref ch) => Channel::from(ch).ok_or("Invalid channel".into()),
         None => Ok(Channel::Stable),
     }
 }
@@ -38,6 +33,15 @@ pub enum Channel {
 }
 
 impl Channel {
+    pub fn from(s: &str) -> Option<Self> {
+        match s {
+            "stable" => Some(Channel::Stable),
+            "beta" => Some(Channel::Beta),
+            "nightly" => Some(Channel::Nightly),
+            _ => None,
+        }
+    }
+
     pub fn to_string(&self) -> String {
         match *self {
             Channel::Stable => "stable",
