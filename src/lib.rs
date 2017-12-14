@@ -9,8 +9,9 @@ extern crate error_chain;
 
 mod errors;
 pub mod client;
+pub mod cli;
 
-pub use errors::Error;
+pub use errors::{Error, Result};
 
 #[derive(Deserialize, Debug)]
 pub struct RunResult {
