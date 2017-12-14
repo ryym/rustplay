@@ -1,4 +1,3 @@
-use super::RunResult;
 use errors::*;
 use config::Config;
 
@@ -10,6 +9,13 @@ struct Payload<'a> {
     crate_type: String,
     mode: String,
     tests: bool,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct RunResult {
+    pub stderr: String,
+    pub stdout: String,
+    pub success: bool,
 }
 
 pub fn new(conf: Config) -> Client {

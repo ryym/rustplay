@@ -14,10 +14,3 @@ pub mod client;
 pub mod cli;
 
 pub use errors::{Error, Result};
-
-#[derive(Deserialize, Debug)]
-pub struct RunResult {
-    pub stderr: String,
-    pub stdout: String,
-    pub success: bool,
-}
