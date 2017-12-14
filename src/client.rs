@@ -54,9 +54,23 @@ impl Client {
         use open;
         use urlencoding;
 
-        let query = urlencoding::encode(&code);
-        let url = format!("https://play.rust-lang.org/?code={}", query);
+        let encoded_code = urlencoding::encode(&code);
+        let url = format!(
+            "https://play.rust-lang.org/?{}&code={}",
+            conf_to_query(&self.conf),
+            encoded_code);
         let _ = open::that(url)?;
         Ok(())
     }
+}
+
+fn conf_to_query(c: &Config) -> String {
+    let qs = [
+        ("version", c.channel()),
+        ("mode", c.mode())
+    ];
+    qs.into_iter()
+        .map(|&(ref n, ref v)| format!("{}={}", n, v))
+        .collect::<Vec<_>>()
+        .join("&")
 }
