@@ -25,11 +25,12 @@ impl Client {
         use serde_json;
         use reqwest as r;
 
+        let conf = &self.conf;
         let p = Payload{
             code,
-            channel: self.conf.channel(),
+            channel: conf.channel(),
             crate_type: "bin".to_string(),
-            mode: "debug".to_string(),
+            mode: conf.mode(),
             tests: false,
         };
 
