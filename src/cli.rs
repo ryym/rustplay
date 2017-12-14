@@ -74,7 +74,7 @@ fn parse_args(args: &Vec<String>) -> Result<Parsed> {
 
 fn define_opts(opts: &mut Options) -> &mut Options {
     opts.optflag("h", "help", "print this help message");
-    opts.optflag("r", "run", "run given code using Rust Playground");
+    opts.optflag("r", "run", "compile and run given code using Rust Playground");
     opts.optflag("o", "open", "open Rust Playground with given code");
     opts.optopt("c", "channel",
                 "chose release channel which compiles code",
