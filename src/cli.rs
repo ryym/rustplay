@@ -10,7 +10,7 @@ pub struct CmdOpts {
 
 struct SrcFile(String);
 
-pub fn run(args: Vec<String>) -> Result<String> {
+pub fn run(args: &[String]) -> Result<String> {
     let (src, conf) = parse_args(args)?;
     exec(src, conf)
 }
@@ -35,7 +35,7 @@ fn exec(src: SrcFile, conf: Config) -> Result<String> {
     }
 }
 
-fn parse_args(args: Vec<String>) -> Result<(SrcFile, Config)> {
+fn parse_args(args: &[String]) -> Result<(SrcFile, Config)> {
     if args.len() <= 1 {
         return Err("No file name given".into())
     }

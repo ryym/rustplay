@@ -3,8 +3,8 @@ extern crate rustplay;
 use std::{env, process};
 
 fn main() {
-    let args = env::args().collect();
-    let ret = rustplay::cli::run(args);
+    let args: Vec<String> = env::args().collect();
+    let ret = rustplay::cli::run(&args);
     match ret {
         Ok(msg) => {
             println!("{}", msg);
