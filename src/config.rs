@@ -13,6 +13,10 @@ impl Config {
             channel,
         })
     }
+
+    pub fn channel(&self) -> String {
+        return self.channel.to_string()
+    }
 }
 
 fn parse_channel(ch: Option<String>) -> Result<Channel> {
@@ -31,4 +35,14 @@ pub enum Channel {
     Stable,
     Beta,
     Nightly,
+}
+
+impl Channel {
+    pub fn to_string(&self) -> String {
+        match *self {
+            Channel::Stable => "stable",
+            Channel::Beta => "beta",
+            Channel::Nightly => "nightly",
+        }.to_string()
+    }
 }

@@ -1,5 +1,6 @@
 use super::RunResult;
 use errors::*;
+use config::Config;
 
 #[derive(Serialize, Debug)]
 struct Payload<'a> {
@@ -11,11 +12,13 @@ struct Payload<'a> {
     tests: bool,
 }
 
-pub fn new() -> Client {
-    Client{}
+pub fn new(conf: Config) -> Client {
+    Client{conf}
 }
 
-pub struct Client;
+pub struct Client {
+    conf: Config,
+}
 
 impl Client {
     pub fn run(&self, code: &String) -> Result<RunResult> {
@@ -24,7 +27,7 @@ impl Client {
 
         let p = Payload{
             code,
-            channel: "stable".to_string(),
+            channel: self.conf.channel(),
             crate_type: "bin".to_string(),
             mode: "debug".to_string(),
             tests: false,

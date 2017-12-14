@@ -15,7 +15,7 @@ pub fn run(args: Vec<String>) -> Result<String> {
     exec(src, conf)
 }
 
-fn exec(src: SrcFile, _conf: Config) -> Result<String> {
+fn exec(src: SrcFile, conf: Config) -> Result<String> {
     let SrcFile(filename) = src;
     let mut src = File::open(&filename)
         .chain_err(|| format!("Failed to open {}", &filename))?;
@@ -24,7 +24,7 @@ fn exec(src: SrcFile, _conf: Config) -> Result<String> {
     src.read_to_string(&mut code)
         .chain_err(|| format!("Failed to read {}", &filename))?;
 
-    let client = client::new();
+    let client = client::new(conf);
     let res = client.run(&code)?;
 
     if res.success {
