@@ -6,31 +6,30 @@ use config::Config;
 use client;
 
 pub struct CmdOpts {
+    pub filename: String,
     pub channel: Option<String>,
 }
 
-struct SrcFile(String);
-
 enum Parsed {
     Help(String),
-    Go(SrcFile, Config),
+    Go(CmdOpts, Config),
 }
 
 pub fn run(args: &Vec<String>) -> Result<String> {
     match parse_args(&args)? {
         Parsed::Help(msg) => Ok(msg),
-        Parsed::Go(src, conf) => exec(src, conf)
+        Parsed::Go(opts, conf) => exec(opts, conf)
     }
 }
 
-fn exec(src: SrcFile, conf: Config) -> Result<String> {
-    let SrcFile(filename) = src;
-    let mut src = File::open(&filename)
-        .chain_err(|| format!("Failed to open {}", &filename))?;
+fn exec(opts: CmdOpts, conf: Config) -> Result<String> {
+    let filename = &opts.filename;
+    let mut src = File::open(filename)
+        .chain_err(|| format!("Failed to open {}", filename))?;
 
     let mut code = String::new();
     src.read_to_string(&mut code)
-        .chain_err(|| format!("Failed to read {}", &filename))?;
+        .chain_err(|| format!("Failed to read {}", filename))?;
 
     let client = client::new(conf);
     let res = client.run(&code)?;
@@ -59,11 +58,11 @@ fn parse_args(args: &Vec<String>) -> Result<Parsed> {
     }
 
     let opts = CmdOpts {
+        filename: m.free[0].clone(),
         channel: Some("stable".to_string()),
     };
 
-    let src_file = m.free[0].clone();
-    Config::new(opts).map(|c| Parsed::Go(SrcFile(src_file), c))
+    Config::new(&opts).map(|c| Parsed::Go(opts, c))
 }
 
 fn define_opts(opts: &mut Options) -> &mut Options {

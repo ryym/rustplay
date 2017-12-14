@@ -6,8 +6,8 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(opts: CmdOpts) -> Result<Config> {
-        let channel = parse_channel(opts.channel)?;
+    pub fn new(opts: &CmdOpts) -> Result<Config> {
+        let channel = parse_channel(&opts.channel)?;
 
         Ok(Config{
             channel,
@@ -19,9 +19,9 @@ impl Config {
     }
 }
 
-fn parse_channel(ch: Option<String>) -> Result<Channel> {
-    match ch {
-        Some(ch) => match ch.as_ref() {
+fn parse_channel(ch: &Option<String>) -> Result<Channel> {
+    match *ch {
+        Some(ref ch) => match ch.as_ref() {
             "stable" => Ok(Channel::Stable),
             "beta" => Ok(Channel::Beta),
             "nightly" => Ok(Channel::Nightly),
