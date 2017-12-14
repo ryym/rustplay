@@ -38,7 +38,7 @@ fn exec(opts: CmdOpts, conf: Config) -> Result<()> {
 
     if opts.run {
         let res = client.run(&code)?;
-        println!("{}", res.stdout);
+        println!("{}", res.stdout.trim_right_matches('\n'));
     }
     if opts.open {
         client.open(&code)?;
