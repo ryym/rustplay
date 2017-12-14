@@ -1,4 +1,5 @@
 use super::RunResult;
+use errors::*;
 
 #[derive(Serialize, Debug)]
 struct Payload<'a> {
@@ -17,7 +18,7 @@ pub fn new() -> Client {
 pub struct Client;
 
 impl Client {
-    pub fn run(&self, code: &String) -> RunResult {
+    pub fn run(&self, code: &String) -> Result<RunResult> {
         use serde_json;
         use reqwest as r;
 
@@ -29,23 +30,25 @@ impl Client {
             tests: false,
         };
 
-        let body = serde_json::to_string(&p).unwrap();
+        let body = serde_json::to_string(&p)?;
 
         let client = r::Client::new();
         let mut res = client.post("https://play.rust-lang.org/execute")
             .header(r::header::ContentType::json())
             .body(body)
-            .send().unwrap();
+            .send()?;
 
-        res.json().unwrap()
+        let ret: RunResult = res.json()?;
+        Ok(ret)
     }
 
-    pub fn open(&self, code: &String) {
+    pub fn open(&self, code: &String) -> Result<()> {
         use open;
         use urlencoding;
 
         let query = urlencoding::encode(&code);
         let url = format!("https://play.rust-lang.org/?code={}", query);
-        open::that(url).unwrap();
+        let _ = open::that(url)?;
+        Ok(())
     }
 }

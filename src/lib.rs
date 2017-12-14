@@ -4,8 +4,13 @@ extern crate serde_json;
 extern crate reqwest;
 extern crate open;
 extern crate urlencoding;
+#[macro_use]
+extern crate error_chain;
 
+mod errors;
 pub mod client;
+
+pub use errors::Error;
 
 #[derive(Deserialize, Debug)]
 pub struct RunResult {
