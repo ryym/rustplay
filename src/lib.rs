@@ -1,16 +1,16 @@
 #[macro_use]
 extern crate serde_derive;
-extern crate serde_json;
-extern crate reqwest;
 extern crate open;
+extern crate reqwest;
+extern crate serde_json;
 extern crate urlencoding;
 #[macro_use]
 extern crate error_chain;
 extern crate getopts;
 
+pub mod cli;
+pub mod client;
 mod config;
 mod errors;
-pub mod client;
-pub mod cli;
 
 pub use errors::{Error, Result};

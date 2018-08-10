@@ -1,5 +1,5 @@
-use errors::*;
 use config::Config;
+use errors::*;
 
 #[derive(Serialize, Debug)]
 struct Payload<'a> {
@@ -26,15 +26,15 @@ const SITE_HOST: &str = "https://play.rust-lang.org";
 
 impl Client {
     pub fn new(conf: Config) -> Self {
-        Client{conf}
+        Client { conf }
     }
 
     pub fn run(&self, code: &String) -> Result<RunResult> {
-        use serde_json;
         use reqwest as r;
+        use serde_json;
 
         let conf = &self.conf;
-        let p = Payload{
+        let p = Payload {
             code,
             channel: conf.channel(),
             crate_type: "bin".to_string(),
@@ -45,7 +45,8 @@ impl Client {
         let body = serde_json::to_string(&p)?;
 
         let client = r::Client::new();
-        let mut res = client.post(&format!("{}/execute", SITE_HOST))
+        let mut res = client
+            .post(&format!("{}/execute", SITE_HOST))
             .header(r::header::ContentType::json())
             .body(body)
             .send()?;
@@ -67,17 +68,15 @@ impl Client {
             "{}/?{}&code={}",
             SITE_HOST,
             conf_to_query(&self.conf),
-            encoded_code);
+            encoded_code
+        );
         let _ = open::that(url)?;
         Ok(())
     }
 }
 
 fn conf_to_query(c: &Config) -> String {
-    let qs = [
-        ("version", c.channel()),
-        ("mode", c.mode())
-    ];
+    let qs = [("version", c.channel()), ("mode", c.mode())];
     qs.into_iter()
         .map(|&(ref n, ref v)| format!("{}={}", n, v))
         .collect::<Vec<_>>()

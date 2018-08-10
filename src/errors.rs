@@ -1,7 +1,7 @@
-use std::io;
-use serde_json;
-use reqwest;
 use getopts;
+use reqwest;
+use serde_json;
+use std::io;
 
 error_chain! {
     foreign_links {

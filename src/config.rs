@@ -1,6 +1,6 @@
-use std::string::ToString;
-use errors::*;
 use cli::CmdOpts;
+use errors::*;
+use std::string::ToString;
 
 pub struct Config {
     channel: Channel,
@@ -9,18 +9,18 @@ pub struct Config {
 
 impl Config {
     pub fn new(opts: &CmdOpts) -> Result<Config> {
-        Ok(Config{
+        Ok(Config {
             channel: parse_channel(&opts.channel)?,
             mode: parse_mode(&opts.mode)?,
         })
     }
 
     pub fn channel(&self) -> String {
-        return self.channel.to_string()
+        return self.channel.to_string();
     }
 
     pub fn mode(&self) -> String {
-        return self.mode.to_string()
+        return self.mode.to_string();
     }
 }
 
@@ -99,9 +99,9 @@ impl ToString for Mode {
 }
 
 fn join_enum_strings<E: ToString>(items: &[E], sep: &str) -> String {
-        items
-            .into_iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<String>>()
-            .join(sep)
+    items
+        .into_iter()
+        .map(|v| v.to_string())
+        .collect::<Vec<String>>()
+        .join(sep)
 }
